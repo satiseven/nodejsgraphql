@@ -4,6 +4,11 @@
   "main": "src/index.js",
   "repository": "git@github.com:satiseven/nodejsgraphql.git",
   "author": "Riza <satiseven777@gmail.com>",
+  "scripts": {
+    "start": "node build/index.js",
+    "watch": "tsc -w",
+    "dev": "nodemon build/index.js"
+  },
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^16.0.1",
