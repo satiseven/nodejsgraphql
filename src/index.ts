@@ -13,6 +13,7 @@ const main = async () => {
       resolvers: [HelloResolver],
       validate: false,
     }),
+    context: () => ({ em: orm.em }),
   });
   apolloServer.applyMiddleware({ app });
   app.get("/", (_, res) => {
