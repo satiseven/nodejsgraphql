@@ -47,8 +47,18 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async login(
     @Arg("options", () => LoginInputs) options: LoginInputs,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
+    if (options.username.length < 5 || options.password.length < 8) {
+      return {
+        errors: [
+          {
+            field: "username",
+            message: "username or password is wrong",
+          },
+        ],
+      };
+    }
     try {
       const user = await em.findOneOrFail(User, {
         username: options.username.toLowerCase(),
@@ -65,6 +75,7 @@ export class UserResolver {
           ],
         };
       }
+      req.session!.userId = user.id;
       return {
         user: user,
       };
@@ -79,19 +90,47 @@ export class UserResolver {
       };
     }
   }
-  @Mutation(() => User)
+  @Mutation(() => UserResponse)
   async register(
     @Arg("options", () => UserInputs) options: UserInputs,
     @Ctx() { em }: MyContext
-  ) {
-    const hashedPassword = await argon2.hash(options.password);
-    const user = await em.create(User, {
-      username: options.username,
-      name: options.name,
-      email: options.email,
-      password: hashedPassword,
-    });
-    await em.persistAndFlush(user);
-    return user;
+  ): Promise<UserResponse> {
+    if (
+      options.email.length < 5 ||
+      options.password.length < 5 ||
+      options.name.length < 5 ||
+      options.username.length < 5
+    ) {
+      return {
+        errors: [
+          {
+            field: "name",
+            message: "Please fill all fileds",
+          },
+        ],
+      };
+    }
+    try {
+      const hashedPassword = await argon2.hash(options.password);
+      const user = await em.create(User, {
+        username: options.username,
+        name: options.name,
+        email: options.email,
+        password: hashedPassword,
+      });
+      await em.persistAndFlush(user);
+      return {
+        user: user,
+      };
+    } catch (error) {
+      return {
+        errors: [
+          {
+            field: "name",
+            message: "an error occur",
+          },
+        ],
+      };
+    }
   }
 }
