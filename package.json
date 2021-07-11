@@ -7,7 +7,9 @@
   "scripts": {
     "start": "node build/index.js",
     "watch": "tsc -w",
-    "dev": "nodemon build/index.js"
+    "dev": "nodemon build/index.js",
+    "migration:create": "mikro-orm migration:create",
+    "migration:up": "mikro-orm migration:up"
   },
   "license": "MIT",
   "devDependencies": {

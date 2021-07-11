@@ -7,6 +7,7 @@ import {
 import path from "path/posix";
 import { __prod__ } from "./constants";
 import { Post } from "./entities/Post";
+import { User } from "./entities/User";
 
 export default {
   dbName: "reddit",
@@ -25,7 +26,7 @@ export default {
     // safe: false,
     // emit: "ts",
   },
-  entities: [Post],
+  entities: [Post, User],
 } as
   | Configuration<IDatabaseDriver<Connection>>
   | Options<IDatabaseDriver<Connection>>
