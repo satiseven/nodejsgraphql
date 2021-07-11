@@ -7,6 +7,7 @@ import {
   InputType,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
 } from "type-graphql";
 import { MyContext } from "../types/MyContext";
@@ -44,6 +45,18 @@ class UserResponse {
 }
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async checkLogin(@Ctx() { req, em }: MyContext): Promise<User | null> {
+    if (!req.session.userId) {
+      return null;
+    }
+    try {
+      const user = await em.findOneOrFail(User, { id: req.session.userId });
+      return user;
+    } catch (error) {
+      return null;
+    }
+  }
   @Mutation(() => UserResponse)
   async login(
     @Arg("options", () => LoginInputs) options: LoginInputs,

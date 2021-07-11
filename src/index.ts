@@ -23,7 +23,7 @@ const main = async () => {
         sameSite: "lax",
         secure: __prod__,
         httpOnly: __prod__,
-        maxAge: 100 * 60 * 60 * 24 * 365 * 10 * 3000,
+        maxAge: 100 * 60 * 60 * 24 * 365,
       },
       saveUninitialized: true,
       store: new RedisStore({
