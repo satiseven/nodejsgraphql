@@ -32,6 +32,7 @@ class LoginInputs {
 class FiledError {
   @Field()
   field: string;
+  @Field()
   message: string;
 }
 @ObjectType()
@@ -43,20 +44,39 @@ class UserResponse {
 }
 @Resolver()
 export class UserResolver {
-  @Mutation(() => Boolean)
-  async Login(
+  @Mutation(() => UserResponse)
+  async login(
     @Arg("options", () => LoginInputs) options: LoginInputs,
     @Ctx() { em }: MyContext
-  ) {
+  ): Promise<UserResponse> {
     try {
       const user = await em.findOneOrFail(User, {
         username: options.username.toLowerCase(),
       });
-      const hashedPassword = await argon2.hash(options.password);
-      argon2.verify;
-      return true;
+
+      const isValid = await argon2.verify(user.password, options.password);
+      if (!isValid) {
+        return {
+          errors: [
+            {
+              field: "password",
+              message: "incorrect password",
+            },
+          ],
+        };
+      }
+      return {
+        user: user,
+      };
     } catch (error) {
-      return false;
+      return {
+        errors: [
+          {
+            field: "username",
+            message: "username dosnt exist",
+          },
+        ],
+      };
     }
   }
   @Mutation(() => User)
