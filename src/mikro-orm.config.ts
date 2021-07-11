@@ -14,7 +14,7 @@ export default {
   user: "postgres",
   password: "satisfaction",
   type: "postgresql",
-  debug: !__prod__,
+  debug: false,
   migrations: {
     tableName: "mikro_orm_migrations",
     path: path.join(__dirname, "./migrations"),

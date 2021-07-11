@@ -13,8 +13,9 @@ import { __prod__ } from "./constants";
 import { MyContext } from "./types/MyContext";
 const main = async () => {
   const app = express();
-  const redisStore = connectRedis(session);
+  const RedisStore = connectRedis(session);
   const redisClient = redis.createClient();
+
   app.use(
     session({
       name: "qid",
@@ -22,9 +23,10 @@ const main = async () => {
         sameSite: "lax",
         secure: __prod__,
         httpOnly: __prod__,
-        maxAge: 1000 * 60 * 60 * 24,
+        maxAge: 100 * 60 * 60 * 24 * 365 * 10 * 3000,
       },
-      store: new redisStore({
+      saveUninitialized: true,
+      store: new RedisStore({
         client: redisClient,
         disableTouch: true,
         disableTTL: true,
@@ -43,8 +45,9 @@ const main = async () => {
     context: ({ req, res }): MyContext => ({ em: orm.em, req, res }),
   });
   apolloServer.applyMiddleware({ app });
-  app.get("/", (_, res) => {
+  app.get("/", (req, res) => {
     res.send("sadfasdf");
+    console.log(req.session.userId);
   });
   app.listen(4000, () => {
     console.log(`Server is running on port http://localhost:4000`);
