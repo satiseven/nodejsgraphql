@@ -109,7 +109,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg("options", () => UserInputs) options: UserInputs,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     if (
       options.email.length < 5 ||
@@ -135,6 +135,8 @@ export class UserResolver {
         password: hashedPassword,
       });
       await em.persistAndFlush(user);
+      req.session.destroy(() => (req.session.userId = user.id));
+
       return {
         user: user,
       };
