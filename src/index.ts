@@ -40,7 +40,7 @@ const main = async () => {
 app.use(
   cors(
     {
-      origin: process.env.CLIENT_SIDE,
+      origin: 'http://localhost:3000',
       credentials:true
     }
   )
@@ -62,6 +62,7 @@ app.use(
     
   });
   app.listen(4000, () => {
+    console.log("Client link is :" + process.env.CLIENT_SIDE);
     console.log(`Server is running on port http://localhost:4000`);
   });
 };
