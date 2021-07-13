@@ -11,11 +11,12 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import { __prod__ } from "./constants";
 import { MyContext } from "./types/MyContext";
+import cors from 'cors';
 const main = async () => {
   const app = express();
   const RedisStore = connectRedis(session);
   const redisClient = redis.createClient();
-
+ 
   app.use(
     session({
       name: "qid",
@@ -35,7 +36,14 @@ const main = async () => {
       resave: false,
     })
   );
-
+app.use(
+  cors(
+    {
+      origin: process.env.CLIENT_SIDE,
+      credentials:true
+    }
+  )
+)
   const orm = await MikroORM.init(microConfig);
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
@@ -46,13 +54,14 @@ const main = async () => {
   });
   apolloServer.applyMiddleware({
     app,
-    cors: { origin: process.env.CLIENT_SIDE as string },
+    cors:false,
   });
   app.get("/", (req, res) => {
     res.send("Test Server");
     console.log(req.session.userId);
   });
   app.listen(4000, () => {
+    console.log("Client link is :" + process.env.CLIENT_SIDE);
     console.log(`Server is running on port http://localhost:4000`);
   });
 };
