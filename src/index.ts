@@ -44,9 +44,12 @@ const main = async () => {
     }),
     context: ({ req, res }): MyContext => ({ em: orm.em, req, res }),
   });
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({
+    app,
+    cors: { origin: process.env.CLIENT_SIDE as string },
+  });
   app.get("/", (req, res) => {
-    res.send("sadfasdf");
+    res.send("Test Server");
     console.log(req.session.userId);
   });
   app.listen(4000, () => {
