@@ -12,6 +12,7 @@ import connectRedis from "connect-redis";
 import { __prod__ } from "./constants";
 import { MyContext } from "./types/MyContext";
 import cors from 'cors';
+ 
 const main = async () => {
   const app = express();
   const RedisStore = connectRedis(session);
@@ -39,7 +40,7 @@ const main = async () => {
 app.use(
   cors(
     {
-      origin: 'http://localhost:3000',
+      origin: process.env.CLIENT_SIDE,
       credentials:true
     }
   )
@@ -56,12 +57,11 @@ app.use(
     app,
     cors:false,
   });
-  app.get("/", (req, res) => {
+  app.get("/", (_, res) => {
     res.send("Test Server");
-    console.log(req.session.userId);
+    
   });
   app.listen(4000, () => {
-    console.log("Client link is :" + process.env.CLIENT_SIDE);
     console.log(`Server is running on port http://localhost:4000`);
   });
 };
