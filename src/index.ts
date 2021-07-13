@@ -39,7 +39,7 @@ const main = async () => {
 app.use(
   cors(
     {
-      origin: process.env.CLIENT_SIDE,
+      origin: 'http://localhost:3000',
       credentials:true
     }
   )
