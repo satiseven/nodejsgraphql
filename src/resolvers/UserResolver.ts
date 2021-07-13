@@ -135,7 +135,8 @@ export class UserResolver {
         password: hashedPassword,
       });
       await em.persistAndFlush(user);
-    
+    req.session.userId=user.id;
+
       return {
         user: user,
       };
