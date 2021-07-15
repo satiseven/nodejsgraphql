@@ -12,12 +12,18 @@ import connectRedis from "connect-redis";
 import { __prod__ } from "./constants";
 import { MyContext } from "./types/MyContext";
 import cors from 'cors';
- 
+ import { config } from "dotenv";
 const main = async () => {
+  config({path:'.env'})
   const app = express();
   const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient();
- 
+  const redisClient = redis.createClient(
+    {
+      password:process.env.REDIS_PASSWORD,
+      host:process.env.REDIS_HOST,
+      port: parseInt(<string>process.env.REDIS_PORT) || 10657 ,
+    }
+  );
   app.use(
     session({
       name: "qid",
@@ -40,7 +46,7 @@ const main = async () => {
 app.use(
   cors(
     {
-      origin: 'http://localhost:3000',
+      origin: process.env.CLIENT_SIDE,
       credentials:true
     }
   )

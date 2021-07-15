@@ -4,7 +4,8 @@ import {
   IDatabaseDriver,
   Options,
 } from "@mikro-orm/core";
-import path from "path/posix";
+import path from "path";
+
 import { __prod__ } from "./constants";
 import { Post } from "./entities/Post";
 import { User } from "./entities/User";
