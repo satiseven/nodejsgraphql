@@ -4,4 +4,4 @@
   # This is the directory that will be deployed
   publish = "build"
   # This is where our functions are located
- # functions = "functions"
+functions = "src"
