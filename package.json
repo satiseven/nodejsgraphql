@@ -6,7 +6,7 @@
   "author": "Riza <satiseven777@gmail.com>",
   "scripts": {
     "start": "node ./build/index.js",
-    "build": "tsc",
+    "build": "tsc --build",
     "watch": "tsc -w",
     "dev": "nodemon ./build/index.js",
     "migration:create": "mikro-orm migration:create",
