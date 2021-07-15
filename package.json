@@ -8,7 +8,6 @@
     "start": "node ./build/index.js",
     "build": "tsc --build",
     "watch": "tsc -w",
-    "postinstall": "netlify-lambda install",
     "dev": "nodemon ./build/index.js",
     "migration:create": "mikro-orm migration:create",
     "migration:up": "mikro-orm migration:up"
