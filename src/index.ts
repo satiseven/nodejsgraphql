@@ -9,7 +9,7 @@ import { UserResolver } from "./resolvers/UserResolver";
 import redis from "redis";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import { __prod__ } from "./constants";
+import { COOKIE_NAME, __prod__ } from "./constants";
 import { MyContext } from "./types/MyContext";
 import cors from 'cors';
  import { config } from "dotenv";
@@ -27,7 +27,7 @@ const main = async () => {
   );
   app.use(
     session({
-      name: "qid",
+      name:  COOKIE_NAME,
       cookie: {
         sameSite: "lax",
         secure: __prod__,

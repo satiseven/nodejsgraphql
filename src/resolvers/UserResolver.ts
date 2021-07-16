@@ -11,6 +11,7 @@ import {
   Resolver,
 } from "type-graphql";
 import { MyContext } from "../types/MyContext";
+import { COOKIE_NAME } from "../constants";
 @InputType()
 class UserInputs {
   @Field()
@@ -150,5 +151,23 @@ export class UserResolver {
         ],
       };
     }
+  }
+  @Mutation(()=>Boolean)
+  logout(
+ @Ctx() {req,res}:MyContext
+  ){
+
+return new Promise(resolve=> req.session.destroy(
+  err=>{
+ res.clearCookie(COOKIE_NAME)
+   
+    if(err){
+      resolve(false)
+      return;
+    }
+    resolve(true)
+    res.status(200);
+  }
+))
   }
 }
