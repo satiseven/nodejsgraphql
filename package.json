@@ -5,8 +5,8 @@
   "repository": "git@github.com:satiseven/nodejsgraphql.git",
   "author": "Riza <satiseven777@gmail.com>",
   "scripts": {
-    "start": "node build/index.js",
-    "bundle": "tsc",
+    "start": "node ",
+    "bundle": "cpx src/**/* functions/bundle",
     "build": "tsc --build",
     "watch": "tsc -w",
     "dev": "nodemon ./build/index.js",
