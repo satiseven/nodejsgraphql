@@ -13,7 +13,9 @@ import { COOKIE_NAME, __prod__ } from "./constants";
 import { MyContext } from "./types/MyContext";
 import cors from 'cors';
  import { config } from "dotenv";
+import { sendEmail } from "./utils/sendEmail";
 const main = async () => {
+  sendEmail("satiseven777@gmail.com","selam qardas")
   config({path:'.env'})
   const app = express();
  

@@ -3,9 +3,10 @@ import { Arg, Ctx, Int, Mutation, Query, Resolver } from "type-graphql";
 import { MyContext } from "../types/MyContext";
 @Resolver()
 export class PostResolver {
-  @Query(() => [Post])
-  posts(@Ctx() { em }: MyContext): Promise<Post[]> {
-    return em.find(Post, {});
+  @Query(() => [Post],{nullable:true})
+ async posts(@Ctx() { em }: MyContext): Promise<Post[]|null> {
+    const posts = await em.find(Post, {});
+    return posts;
   }
   @Query(() => Post, { nullable: true })
   post(
