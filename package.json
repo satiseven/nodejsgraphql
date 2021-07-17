@@ -6,6 +6,7 @@
   "author": "Riza <satiseven777@gmail.com>",
   "scripts": {
     "start": "node build/index.js",
+    "bundle": "tsc",
     "build": "tsc --build",
     "watch": "tsc -w",
     "dev": "nodemon ./build/index.js",
