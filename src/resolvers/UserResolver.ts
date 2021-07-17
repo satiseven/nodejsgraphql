@@ -1,5 +1,6 @@
 import { User } from "../entities/User";
 import argon2 from "argon2";
+import { sendEmail } from "../utils/sendEmail"
 import {
   Arg,
   Ctx,
@@ -46,6 +47,18 @@ class UserResponse {
 }
 @Resolver()
 export class UserResolver {
+  @Mutation(()=>Boolean)
+  async forgerPassword(
+    @Arg('email') email:string,
+    @Ctx() {em}:MyContext
+  ):Promise<Boolean>{
+    const user=await em.findOne(User,{email});
+    if(!user){
+      return false
+    }
+    sendEmail(user.email,'this is a test mail');
+      return true
+  }
   @Query(() => User, { nullable: true })
   async checkLogin(@Ctx() { req, em }: MyContext): Promise<User | null> {
     if (!req.session.userId) {
