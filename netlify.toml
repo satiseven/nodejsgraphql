@@ -1,6 +1,6 @@
 [build]
   # This command builds the site
-  command = "yarn install && tsc --build "
+  command = "tsc --build "
  
   # This is the directory that will be deployed
   publish = "build"
