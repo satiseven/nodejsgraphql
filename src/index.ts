@@ -6,31 +6,23 @@ import { ApolloServer } from "apollo-server-express";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/PostsResolver";
 import { UserResolver } from "./resolvers/UserResolver";
-import redis from "redis";
+import Redis from "ioredis";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import { COOKIE_NAME, __prod__ } from "./constants";
 import { MyContext } from "./types/MyContext";
-<<<<<<< HEAD
-import cors from 'cors';
- import { config } from "dotenv";
-import { sendEmail } from "./utils/sendEmail";
-const main = async () => {
-  sendEmail("satiseven777@gmail.com","selam qardas")
-  config({path:'.env'})
-=======
 import cors from "cors";
 import { config } from "dotenv";
 const main = async () => {
   config({ path: ".env" });
->>>>>>> 426b07d44eb24b2bb7d1183f0c30373093a82090
   const app = express();
-
   const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient({
-    password: process.env.REDIS_PASSWORD,
-    host: process.env.REDIS_HOST,
-    port: parseInt(<string>process.env.REDIS_PORT) || 10657,
+  const redisClient=new Redis({
+    port: parseInt(<string>process.env.REDIS_PORT) || 10657, // Redis port
+    host: process.env.REDIS_HOST, // Redis host
+    family: 4, // 4 (IPv4) or 6 (IPv6)
+    password:process.env.REDIS_PASSWORD,
+    db: 0,
   });
   app.use(
     session({
