@@ -48,6 +48,30 @@ class UserResponse {
 }
 @Resolver()
 export class UserResolver {
+  @Mutation(()=>UserResponse)
+  async changePassword(
+    @Arg('token') token:string,
+    @Arg('newPassword') newPassword:string,
+    @Ctx() {em,redis,req}:MyContext
+  ):Promise<UserResponse>{
+const userId=await redis.get(FORGET_PASSWORD_PREFIX+token);
+if(!userId){
+ return {
+   errors:[
+     {
+       field:"newPassword",
+       message:"cant find the token"
+     }
+   ]
+ }
+}
+const user=await em.findOne(User,{id:parseInt(userId)});
+user.password= await argon2.hash(newPassword);
+em.persistAndFlush(user);
+req.session.userId=user.id
+return {user}
+}
+  
   @Mutation(()=>Boolean)
   async forgerPassword(
     @Arg('email') email:string,
@@ -59,7 +83,7 @@ export class UserResolver {
     }
     const token=v4();
     redis.set(FORGET_PASSWORD_PREFIX+token,user.id,'ex',1000*60*60*24)
-    sendEmail(user.email,token);
+    sendEmail(user.email,`<a href="${process.env.CLIENT_SIDE}/change-password/${token}" target="_blank">Click to reset<a>`);
       return true
   }
   @Query(() => User, { nullable: true })
