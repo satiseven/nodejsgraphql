@@ -12,7 +12,8 @@ import {
   Resolver,
 } from "type-graphql";
 import { MyContext } from "../types/MyContext";
-import { COOKIE_NAME } from "../constants";
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from "../constants";
+import {v4} from "uuid"
 @InputType()
 class UserInputs {
   @Field()
@@ -50,13 +51,15 @@ export class UserResolver {
   @Mutation(()=>Boolean)
   async forgerPassword(
     @Arg('email') email:string,
-    @Ctx() {em}:MyContext
+    @Ctx() {em,redis}:MyContext
   ):Promise<Boolean>{
     const user=await em.findOne(User,{email});
     if(!user){
       return false
     }
-    sendEmail(user.email,'this is a test mail');
+    const token=v4();
+    redis.set(FORGET_PASSWORD_PREFIX+token,user.id,'ex',1000*60*60*24)
+    sendEmail(user.email,token);
       return true
   }
   @Query(() => User, { nullable: true })

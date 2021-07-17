@@ -17,7 +17,7 @@ const main = async () => {
   config({ path: ".env" });
   const app = express();
   const RedisStore = connectRedis(session);
-  const redisClient=new Redis({
+  const redis=new Redis({
     port: parseInt(<string>process.env.REDIS_PORT) || 10657, // Redis port
     host: process.env.REDIS_HOST, // Redis host
     family: 4, // 4 (IPv4) or 6 (IPv6)
@@ -35,7 +35,7 @@ const main = async () => {
       },
       saveUninitialized: true,
       store: new RedisStore({
-        client: redisClient,
+        client: redis,
         disableTouch: true,
         disableTTL: true,
       }),
@@ -55,7 +55,7 @@ const main = async () => {
       resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => ({ em: orm.em, req, res }),
+    context: ({ req, res }): MyContext => ({ em: orm.em, req, res,redis }),
   });
   apolloServer.applyMiddleware({
     app,
