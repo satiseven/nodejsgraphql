@@ -5,7 +5,7 @@
   "repository": "git@github.com:satiseven/nodejsgraphql.git",
   "author": "Riza <satiseven777@gmail.com>",
   "scripts": {
-    "start": "node ./build/index.js",
+    "start": "node build/index.js",
     "build": "tsc --build",
     "watch": "tsc -w",
     "dev": "nodemon ./build/index.js",
@@ -24,31 +24,19 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@mikro-orm/cli": "^4.5.7",
     "@mikro-orm/core": "^4.5.7",
-    "@mikro-orm/migrations": "^4.5.7",
     "@mikro-orm/postgresql": "^4.5.7",
     "apollo-server-express": "^2.25.2",
     "argon2": "^0.28.2",
     "class-validator": "^0.13.1",
     "connect-redis": "^6.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "graphql": "^15.5.1",
     "mysql": "^2.18.1",
-    "netlify-lambda": "^2.0.11",
     "pg": "^8.6.0",
-    "pg-native": "^3.0.0",
     "redis": "^3.1.2",
     "type-graphql": "^1.1.1"
-  },
-  "mikro-orm": {
-    "useTsNode": true,
-    "configPaths": [
-      "./src/mikro-orm.config.ts",
-      "./build/mikro-orm.config.js"
-    ]
   }
 }
