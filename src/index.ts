@@ -1,6 +1,5 @@
-import { MikroORM } from "@mikro-orm/core";
-import microConfig from "./mikro-orm.config";
 import express from "express";
+import "reflect-metadata"
 import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server-express";
 import { HelloResolver } from "./resolvers/hello";
@@ -13,6 +12,7 @@ import { COOKIE_NAME, __prod__ } from "./constants";
 import { MyContext } from "./types/MyContext";
 import cors from "cors";
 import { config } from "dotenv";
+import { createConnection} from "typeorm"
 const main = async () => {
   config({ path: ".env" });
   const app = express();
@@ -49,13 +49,14 @@ const main = async () => {
       credentials: true,
     })
   );
-  const orm = await MikroORM.init(microConfig);
+ // const orm = await MikroORM.init(microConfig);
+ const conn= await createConnection();
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => ({ em: orm.em, req, res,redis }),
+    context: ({ req, res }): MyContext => ({  req, res,redis }),
   });
   apolloServer.applyMiddleware({
     app,
