@@ -54,7 +54,8 @@ export class UserResolver {
     @Arg('newPassword') newPassword:string,
     @Ctx() {em,redis,req}:MyContext
   ):Promise<UserResponse>{
-const userId=await redis.get(FORGET_PASSWORD_PREFIX+token);
+    const key=FORGET_PASSWORD_PREFIX+token
+const userId=await redis.get(key);
 if(!userId){
  return {
    errors:[
@@ -68,12 +69,13 @@ if(!userId){
 const user=await em.findOne(User,{id:parseInt(userId)});
 user.password= await argon2.hash(newPassword);
 em.persistAndFlush(user);
+redis.del(key)
 req.session.userId=user.id
 return {user}
 }
   
   @Mutation(()=>Boolean)
-  async forgerPassword(
+  async forgetPassword(
     @Arg('email') email:string,
     @Ctx() {em,redis}:MyContext
   ):Promise<Boolean>{
